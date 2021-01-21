@@ -1,21 +1,22 @@
 import express from 'express';
 import { createPost, getPosts, updatePost, deletePost, likePost } from '../controllers/posts.js'
+import auth from '../Middlewares/auth.js';
 const router = express.Router();
 
 // Get all posts data
 router.get('/', getPosts)
 
 // Submit one post to database
-router.post('/', createPost);
+router.post('/', auth, createPost);
 
 // Update one Post
-router.patch('/:id', updatePost);
+router.patch('/:id', auth, updatePost);
 
 // Delete one Post
-router.delete('/:id', deletePost);
+router.delete('/:id', auth, deletePost);
 
 // Update likesCount for single Post
-router.patch('/:id/likePost', likePost);
+router.patch('/:id/likePost', auth, likePost);
 
 
 export default router

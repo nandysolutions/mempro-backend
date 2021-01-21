@@ -4,13 +4,15 @@ import cors from 'cors';
 import mongoose from 'mongoose';
 import bodyparser from 'body-parser';
 import postRoutes from './Routes/posts.js';
+import userRoutes from './Routes/users.js';
 dotenv.config();
 const app = express();
 app.use(cors());
-app.get('/',(req,res)=> res.send("Welcome to Nandy's Memories API"))
+app.get('/', (req, res) => res.send("Welcome to Nandy's Memories API"))
 app.use(bodyparser.json({ limit: "30mb", extended: true }));
 app.use(bodyparser.urlencoded({ limit: "30mb", extended: true }));
 app.use('/posts', postRoutes);
+app.use('/users', userRoutes);
 
 const PORT = process.env.PORT || 5000;
 mongoose.connect(process.env.DATABASE_URL, { useNewUrlParser: true, useUnifiedTopology: true })

@@ -1,6 +1,6 @@
 import Post from "../models/post.js";
 import mongoose from 'mongoose';
-import post from "../models/post.js";
+import moment from 'moment';
 export const getPosts = async (req, res) => {
     try {
         const posts = await Post.find();
@@ -11,7 +11,7 @@ export const getPosts = async (req, res) => {
 }
 
 export const createPost = async (req, res) => {
-    const post = new Post(req.body);
+    const post = new Post({ ...req.body, date: new Date().toISOString(), creator: req.userId });
     try {
         await post.save();
         res.status(201).json(post)
@@ -43,9 +43,20 @@ export const deletePost = async (req, res) => {
 
 // Update likesCount for the post
 export const likePost = async (req, res) => {
+    if (!req.userId) return res.status(400).json({ message: "Access Denied!" })
     const { id } = req.params;
     if (!mongoose.isValidObjectId(id)) return res.status(404).json({ message: "No post with that id!" })
     const cur_post = await Post.findById(id);
-    const upd_post = await Post.findByIdAndUpdate(id, { likeCount: cur_post.likeCount + 1 }, { new: true });
+    const index = cur_post.likes.findIndex((id) => id === String(req.userId))
+    if (index === -1) {
+        //Like the post
+        cur_post.likes.push(req.userId)
+    }
+    else {
+        //Dislike the post
+        cur_post.likes = cur_post.likes.filter((id) => id !== String(req.userId))
+    }
+
+    const upd_post = await Post.findByIdAndUpdate(id, cur_post, { new: true });
     res.status(201).json(upd_post)
 }

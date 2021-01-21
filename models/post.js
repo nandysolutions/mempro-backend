@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import moment from 'moment';
+import moment from 'moment-timezone';
 const postSchema = new mongoose.Schema({
     title: {
         type: String,
@@ -12,6 +12,9 @@ const postSchema = new mongoose.Schema({
         required: true,
         min: 10,
     },
+    name: {
+        type: String
+    },
     creator: {
         type: String,
         required: true,
@@ -23,9 +26,9 @@ const postSchema = new mongoose.Schema({
     selectedFile: {
         type: String
     },
-    likeCount: {
-        type: Number,
-        default: 0
+    likes: {
+        type: [String],
+        default: []
     },
     date: {
         type: Date,
