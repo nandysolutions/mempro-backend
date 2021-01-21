@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 const auth = (req, res, next) => {
-    let decodedData;
     try {
+        let decodedData;
         const token = req.headers.authorization.split(' ')[1];
         const isCutomtoken = token.length < 500;
         if (token && isCutomtoken) {
