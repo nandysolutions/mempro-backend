@@ -43,9 +43,11 @@ export const deletePost = async (req, res) => {
 
 // Update likesCount for the post
 export const likePost = async (req, res) => {
+    console.log(req.userId)
     if (!req.userId) return res.status(400).json({ message: "Access Denied!" })
     const { id } = req.params;
-    if (!mongoose.isValidObjectId(id)) return res.status(404).json({ message: "No post with that id!" })
+    if (!mongoose.Types.ObjectId.isValid(id)) return res.status(404).send(`No post with id: ${id}`);
+    // if (!mongoose.isValidObjectId(id)) return res.status(404).json({ message: "No post with that id!" })
     const cur_post = await Post.findById(id);
     const index = cur_post.likes.findIndex((id) => id === String(req.userId))
     if (index === -1) {

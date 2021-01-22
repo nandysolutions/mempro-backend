@@ -24,8 +24,17 @@ export const signUp = async (req, res) => {
         if (password !== confirmpass) return res.json({ message: "Passwords doesn't match!" })
         const hashedPass = await bcrypt.hash(password, 12)
         const result = await User.create({ email, password: hashedPass, name: `${firstName} ${lastName}` })
-        const token = jwt.sign({ email: res.email, id: res._id }, process.env.SECRET, { expiresIn: "1h" })
+        const token = jwt.sign({ email: result.email, id: result._id }, process.env.SECRET, { expiresIn: "1h" })
         res.status(201).json({ result, token })
+    } catch (err) {
+        res.status(500).json({ message: "Something went wrong :(" })
+    }
+}
+
+export const getUsers = async (req, res) => {
+    try {
+        const users = await User.find({}, { name: 1 })
+        res.status(200).json(users);
     } catch (err) {
         res.status(500).json({ message: "Something went wrong :(" })
     }
