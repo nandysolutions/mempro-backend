@@ -43,7 +43,6 @@ export const deletePost = async (req, res) => {
 
 // Update likesCount for the post
 export const likePost = async (req, res) => {
-    console.log(req.userId)
     if (!req.userId) return res.status(400).json({ message: "Access Denied!" })
     const { id } = req.params;
     if (!mongoose.Types.ObjectId.isValid(id)) return res.status(404).send(`No post with id: ${id}`);
@@ -62,3 +61,36 @@ export const likePost = async (req, res) => {
     const upd_post = await Post.findByIdAndUpdate(id, cur_post, { new: true });
     res.status(201).json(upd_post)
 }
+
+export const commentPost = async (req, res) => {
+    if (!req.userId) return res.status(400).json({ message: "Access Denied!" })
+    const { id } = req.params;
+    const newId2 = new mongoose.Types.ObjectId();
+
+    if (!mongoose.Types.ObjectId.isValid(id)) return res.status(404).send(`No post with id: ${id}`);
+    const cur_post = await Post.findById(id);
+    // const index = cur_post.comments.user.findIndex(({ id }) => id === String(req.userId))
+    // if (index !== -1) {
+    //Comment the post
+    cur_post.comments.push({ id: req.userId, commentAt: new Date().toISOString(), comment: req.body.comment, c_id: newId2, name: req.body.user.name })
+    // cur_post.comments.comments.push(req.body.comment)
+    // }
+    // else {
+    // cur_post.comments.comments = req.body.comment
+    // cur_post.comments.user = [{ id: req.userId, commentAt: new Date().toISOString(), comment: req.body.comment }]
+    // }
+    const upd_post = await Post.findByIdAndUpdate(id, cur_post, { new: true });
+    res.status(201).json(upd_post)
+}
+export const deleteComment = async (req, res) => {
+    if (!req.userId) return res.status(400).json({ message: "Access Denied!" })
+    const { id } = req.params;
+    const c_id = req.body.c_id
+    if (!mongoose.Types.ObjectId.isValid(id)) return res.status(404).send(`No post with id: ${id}`);
+    const cur_post = await Post.findById(id);
+    const comments = cur_post.comments
+    const upd_comments = comments.filter((item) => String(item?.c_id) !== c_id)
+    cur_post.comments = upd_comments
+    const upd_post = await Post.findByIdAndUpdate(id, cur_post, { new: true });
+    res.status(201).json(upd_post)
+};
