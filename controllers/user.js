@@ -33,7 +33,7 @@ export const signUp = async (req, res) => {
 
 export const getUsers = async (req, res) => {
     try {
-        const users = await User.find({}, { name: 1 })
+        const users = await User.find({}, { name: 1, email: 1 })
         res.status(200).json(users);
     } catch (err) {
         res.status(500).json({ message: "Something went wrong :(" })

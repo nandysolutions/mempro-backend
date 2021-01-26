@@ -72,7 +72,7 @@ export const commentPost = async (req, res) => {
     // const index = cur_post.comments.user.findIndex(({ id }) => id === String(req.userId))
     // if (index !== -1) {
     //Comment the post
-    cur_post.comments.push({ id: req.userId, commentAt: new Date().toISOString(), comment: req.body.comment, c_id: newId2, name: req.body.user.name })
+    cur_post.comments.push({ id: req.userId, commentAt: new Date().toISOString(), comment: req.body.comment, c_id: newId2, name: req.body.user.name, imageUrl: req.body.user.imageUrl })
     // cur_post.comments.comments.push(req.body.comment)
     // }
     // else {
