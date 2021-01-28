@@ -1,4 +1,5 @@
 import jwt from 'jsonwebtoken';
+import decode from 'jwt-decode'
 const auth = (req, res, next) => {
     try {
         let decodedData;
@@ -9,8 +10,12 @@ const auth = (req, res, next) => {
             req.userId = decodedData?.id;
         }
         else {
-            decodedData = jwt.decode(token);
-            req.userId = decodedData?.sub;
+            decodedData = decode(token);
+            if (decodedData?.sub === undefined) {
+                req.userId = decodedData.user_id
+            } else {
+                req.userId = decodedData?.sub;
+            }
         }
         next();
 
