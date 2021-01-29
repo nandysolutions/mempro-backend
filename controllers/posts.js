@@ -69,7 +69,7 @@ export const commentPost = async (req, res) => {
 
     if (!mongoose.Types.ObjectId.isValid(id)) return res.status(404).send(`No post with id: ${id}`);
     const cur_post = await Post.findById(id);
-    cur_post.comments.push({ id: req.userId, commentAt: new Date().toISOString(), comment: req.body.comment, c_id: newId2, name: req.body.user.name, imageUrl: req.body.user.imageUrl || req.body.user.picture.data.url })
+    cur_post.comments.push({ id: req.userId, commentAt: new Date().toISOString(), comment: req.body.comment, c_id: newId2, name: req.body.user.name, imageUrl: req.body.user?.imageUrl || req.body.user?.picture?.data.url || req.body.user?.avatar_url })
     const upd_post = await Post.findByIdAndUpdate(id, cur_post, { new: true });
     res.status(201).json(upd_post)
 }
