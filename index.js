@@ -8,6 +8,9 @@ import userRoutes from './Routes/users.js';
 import { Strategy } from 'passport-twitter';
 import passport from 'passport';
 import session from 'express-session';
+import { createImageUpload } from './controllers/image.js';
+
+
 
 dotenv.config();
 const app = express();
@@ -46,7 +49,7 @@ passport.use(new Strategy({
         cb(null, profile)
     }
 ));
-
+app.use('/image-upload', createImageUpload)
 app.get('/auth/twitter',
     passport.authenticate('twitter'));
 
