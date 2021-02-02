@@ -6,11 +6,12 @@ const auth = (req, res, next) => {
         const headers = req.headers
         const token = headers.authorization.split(' ')[1];
         const isCutomtoken = token.length < 500;
-        if (headers.type === 'github') {
+        if (headers.type === 'github' || headers.type === 'linkedin') {
             const user = req.headers.id;
             req.userId = user
 
-        } else if (token && isCutomtoken) {
+        }
+        else if (token && isCutomtoken) {
             decodedData = jwt.decode(token, process.env.SECRET)
             req.userId = decodedData?.id;
         }
